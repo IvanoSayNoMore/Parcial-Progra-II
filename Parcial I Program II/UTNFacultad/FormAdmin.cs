@@ -45,6 +45,7 @@ namespace UTNFacultad
 
         private void btn_AltaUsuario_Click(object sender, EventArgs e)
         {
+            OpcionesAsignarMateriaAlumno(false);
             OpcionesAltaMateria(false);
             OpcionesCambioEstadoAlumno(false);
             OpcionesAsignarMateria(false);
@@ -53,6 +54,7 @@ namespace UTNFacultad
 
         private void btn_AltaMateria_Click(object sender, EventArgs e)
         {
+            OpcionesAsignarMateriaAlumno(false);
             OpcionesAltaUsuario(false);
             OpcionesAsignarMateria(false);
             OpcionesCambioEstadoAlumno(false);
@@ -61,6 +63,7 @@ namespace UTNFacultad
 
         private void btn_AsignarMateria_Click(object sender, EventArgs e)
         {
+            OpcionesAsignarMateriaAlumno(false);
             OpcionesAltaMateria(false);
             OpcionesAltaUsuario(false);
             OpcionesCambioEstadoAlumno(false);
@@ -89,6 +92,7 @@ namespace UTNFacultad
 
         private void btn_cambioEstadoAlumno_Click(object sender, EventArgs e)
         {
+            OpcionesAsignarMateriaAlumno(false);
             OpcionesAltaMateria(false);
             OpcionesAltaUsuario(false);
             OpcionesAsignarMateria(false);
@@ -206,8 +210,61 @@ namespace UTNFacultad
                     OpcionesCambioEstadoAlumno(false);
                 }
             }
+            else
+            {
+                MessageBox.Show("Faltan Cargar datos");
+            }
         }
 
+
+        private void btn_InscribirAlumno_Click(object sender, EventArgs e)
+        {
+            OpcionesAltaMateria(false);
+            OpcionesCambioEstadoAlumno(false);
+            OpcionesAsignarMateria(false);
+            OpcionesAltaUsuario(false);
+            OpcionesAsignarMateriaAlumno(true);
+
+        }
+
+        private void btn_AsignarMateriaAlumno_Click(object sender, EventArgs e)
+        {
+            Materia auxMateria;
+            if(txb_NombreMateria.Text != "MATERIA")
+            {
+                auxMateria = LogicaUTNAvellaneda.BuscaMateriaPorNombre(txb_NombreMateria.Text);
+                if (auxMateria is not null)
+                {
+                    if (LogicaUTNAvellaneda.ValidaCorrelativaAprobada(auxMateria, (long)nm_legajoProfesor.Value))
+                    {
+                        if (auxMateria + (long)nm_legajoProfesor.Value)
+                        {
+                            MessageBox.Show($"Se ha inscripto a la materia {auxMateria.Nombre_De_Materia} ");
+                             
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ya esta inscripto a la materia seleccionada");                            
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("No tiene aprobada la materia correlativa");
+                        
+
+                    }
+                }
+            }
+
+        }
+
+        private void OpcionesAsignarMateriaAlumno(bool condicion)
+        {
+            nm_legajoProfesor.Visible = condicion;
+            txb_NombreMateria.Visible = condicion;
+            btn_AsignarMateriaAlumno.Visible = condicion;
+            lbl_legajo.Visible = condicion;
+        }
 
         private void OpcionesCambioEstadoAlumno(bool condicion)
         {
@@ -431,6 +488,7 @@ namespace UTNFacultad
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
+
 
     
     }

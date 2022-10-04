@@ -58,6 +58,8 @@
             this.rdb_Libre = new System.Windows.Forms.RadioButton();
             this.rdb_Regular = new System.Windows.Forms.RadioButton();
             this.btn_CambiarEstado = new System.Windows.Forms.Button();
+            this.btn_InscribirAlumno = new System.Windows.Forms.Button();
+            this.btn_AsignarMateriaAlumno = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nm_legajoProfesor)).BeginInit();
             this.SuspendLayout();
             // 
@@ -440,12 +442,35 @@
             this.btn_CambiarEstado.UseVisualStyleBackColor = true;
             this.btn_CambiarEstado.Click += new System.EventHandler(this.btn_CambiarEstado_Click);
             // 
+            // btn_InscribirAlumno
+            // 
+            this.btn_InscribirAlumno.Location = new System.Drawing.Point(148, 280);
+            this.btn_InscribirAlumno.Name = "btn_InscribirAlumno";
+            this.btn_InscribirAlumno.Size = new System.Drawing.Size(122, 45);
+            this.btn_InscribirAlumno.TabIndex = 47;
+            this.btn_InscribirAlumno.Text = "Inscribir Alumno a materia";
+            this.btn_InscribirAlumno.UseVisualStyleBackColor = true;
+            this.btn_InscribirAlumno.Click += new System.EventHandler(this.btn_InscribirAlumno_Click);
+            // 
+            // btn_AsignarMateriaAlumno
+            // 
+            this.btn_AsignarMateriaAlumno.Location = new System.Drawing.Point(553, 364);
+            this.btn_AsignarMateriaAlumno.Name = "btn_AsignarMateriaAlumno";
+            this.btn_AsignarMateriaAlumno.Size = new System.Drawing.Size(113, 23);
+            this.btn_AsignarMateriaAlumno.TabIndex = 48;
+            this.btn_AsignarMateriaAlumno.Text = "Asignar";
+            this.btn_AsignarMateriaAlumno.UseVisualStyleBackColor = true;
+            this.btn_AsignarMateriaAlumno.Visible = false;
+            this.btn_AsignarMateriaAlumno.Click += new System.EventHandler(this.btn_AsignarMateriaAlumno_Click);
+            // 
             // FormAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(837, 422);
+            this.Controls.Add(this.btn_AsignarMateriaAlumno);
+            this.Controls.Add(this.btn_InscribirAlumno);
             this.Controls.Add(this.btn_CambiarEstado);
             this.Controls.Add(this.rdb_Regular);
             this.Controls.Add(this.rdb_Libre);
@@ -521,5 +546,7 @@
         private RadioButton rdb_Libre;
         private RadioButton rdb_Regular;
         private Button btn_CambiarEstado;
+        private Button btn_InscribirAlumno;
+        private Button btn_AsignarMateriaAlumno;
     }
 }

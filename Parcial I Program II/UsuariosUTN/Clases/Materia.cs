@@ -86,8 +86,7 @@ namespace UsuariosUTN.Usuarios
             if(materia is not null && legajoAlumno != 0)
             {
                 if(materia!=legajoAlumno)
-                {
-                    
+                {                    
                     materia._AsistenciaAlumnos.Add(legajoAlumno,0);
                     retorno = true;
                 }

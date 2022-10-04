@@ -28,36 +28,37 @@ namespace UTNFacultad
         {
             bool aux;
             Usuario admin = new TipoUsuario("z", "z", "z", "z", 1005, ETiposUsuarios.Admin);
-            Usuario alum = new TipoUsuario("Ivan", "Fabella", "a", "a", 1001, ETiposUsuarios.Alumno);
-            Usuario alum2 = new TipoUsuario("Aldana", "Medina", "b", "b", 1002, ETiposUsuarios.Alumno);
+            Usuario ivan = new TipoUsuario("Ivan", "Fabella", "a", "a", 1001, ETiposUsuarios.Alumno);
+            Usuario aldana = new TipoUsuario("Aldana", "Medina", "b", "b", 1002, ETiposUsuarios.Alumno);
             Usuario prof = new TipoUsuario("Profesor", "Profesor", "c", "c", 1003, ETiposUsuarios.Profesor);
             
             LogicaUTNAvellaneda.AgregarUsuarioALista(prof);
-            LogicaUTNAvellaneda.AgregarUsuarioALista(alum);
-            LogicaUTNAvellaneda.AgregarUsuarioALista(alum2);
+            LogicaUTNAvellaneda.AgregarUsuarioALista(ivan);
+            LogicaUTNAvellaneda.AgregarUsuarioALista(aldana);
             LogicaUTNAvellaneda.AgregarUsuarioALista(admin);
 
-            Examen exam = new Examen("19/04/1993", "Ingles", prof.Legajo, alum.Legajo, 10, EParcialesPromedio.pParcial);
+            Examen exam = new Examen("19/04/1993","Ingles", prof.Legajo, ivan.Legajo, 10, EParcialesPromedio.pParcial);
 
-            NotasAlumno nuevasNotas = new NotasAlumno(exam.Materia, exam.LegajoAlumno);
+            NotasAlumno nuevasNotas = new NotasAlumno(exam.Materia, ivan.Legajo);
             nuevasNotas.estadoCursada = EEstadoCursada.Regular;
             nuevasNotas.AgregarNota(exam.Nota, exam.TipoParcial);
-            LogicaUTNAvellaneda.AgregaNotasAlumno(nuevasNotas);
 
+            LogicaUTNAvellaneda.AgregaNotasAlumno(nuevasNotas);
+            Materia mat0 = new Materia("Matematica", 1, "No tiene");
             Materia mat = new Materia("Matematica II", 1, "Matematica");
             Materia mat2 = new Materia("Ingles II", 1, "Ingles");
             Materia mat3 = new Materia("Laboratorio II", 1, "Laboratorio");
-            aux = mat + alum.Legajo;
-            aux = mat2 + alum.Legajo;//agrega alumno a materia 
-            aux = mat2 + alum2.Legajo;
+            //aux = mat + alum.Legajo;
+            aux = mat2 + ivan.Legajo;//agrega alumno a materia 
+            aux = mat2 + aldana.Legajo;
 
             if (mat+prof)
             {
                 Console.WriteLine("Se agrego ok ");
             }
-          
-            Materia.DarAsistencia(mat, alum.Legajo);
- 
+
+            //Materia.DarAsistencia(mat, ivan.Legajo);
+            _materias.Add(mat0);
             _materias.Add(mat);
             _materias.Add(mat2);
             _materias.Add(mat3);
@@ -401,5 +402,20 @@ namespace UTNFacultad
             return retorno;
         }
 
+        public static bool ValidaCorrelativaAprobada(Materia mat, long legajoAlumno)
+        {
+            bool retorno = false;
+            foreach(NotasAlumno item in _notasAlumnos)
+            {
+                if(item.LegajoAlumno == legajoAlumno
+                    && item.Materia == mat.Correlativa && item.EstadoMateria == EEstadoMateria.Aprobada || mat.Correlativa == "No tiene")
+                {
+                    retorno = true;
+                    break;
+                }
+            }
+
+            return retorno;
+        }
     }
 }

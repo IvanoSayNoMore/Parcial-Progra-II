@@ -99,16 +99,26 @@ namespace UTNFacultad
                 auxMateria = LogicaUTNAvellaneda.BuscaMateriaPorNombre(materia);
                 if (auxMateria is not null)
                 {
-                    if (auxMateria + usuario.Legajo)
+                    if(LogicaUTNAvellaneda.ValidaCorrelativaAprobada(auxMateria,usuario.Legajo))
                     {
-                        MessageBox.Show($"Se ha inscripto a la materia {auxMateria.Nombre_De_Materia} ");
-                        dtaGV_materias.Visible = false;
+                        if (auxMateria + usuario.Legajo)
+                        {
+                            MessageBox.Show($"Se ha inscripto a la materia {auxMateria.Nombre_De_Materia} ");
+                            dtaGV_materias.Visible = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ya esta inscripto a la materia seleccionada");
+                            dtaGV_materias.Visible = false;
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Ya esta inscripto a la materia seleccionada");
+                        MessageBox.Show("No tiene aprobada la materia correlativa");
                         dtaGV_materias.Visible = false;
+
                     }
+
                 }
                
             }

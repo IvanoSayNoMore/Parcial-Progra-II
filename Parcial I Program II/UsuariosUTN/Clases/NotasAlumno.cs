@@ -78,6 +78,11 @@ namespace UsuariosUTN.Clases
             set { _eEstadoCursada = value; }
         }
 
+        public EEstadoMateria EstadoMateria
+        {
+            get { return _estadoMateria; }
+        }
+
         public long LegajoAlumno
         {
             get { return _legajoAlumno; }
