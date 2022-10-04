@@ -1,0 +1,182 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0-windows7.0": {
+      "Newtonsoft.Json/13.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "VisualBasic.PowerPacks.Vs/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/Microsoft.VisualBasic.PowerPacks.Vs.dll": {},
+          "lib/Microsoft.VisualBasic.dll": {}
+        },
+        "runtime": {
+          "lib/Microsoft.VisualBasic.PowerPacks.Vs.dll": {},
+          "lib/Microsoft.VisualBasic.dll": {}
+        }
+      },
+      "UsuariosUTN/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/UsuariosUTN.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/UsuariosUTN.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Newtonsoft.Json/13.0.1": {
+      "sha512": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A==",
+      "type": "package",
+      "path": "newtonsoft.json/13.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "newtonsoft.json.13.0.1.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
+      ]
+    },
+    "VisualBasic.PowerPacks.Vs/1.0.0": {
+      "sha512": "IiQWQjCWfPmwR8Q1P1V/z1Et7Mr3QG4RUw+mgXuUgNvseNm06VDEZu8DwlZx9UXw+Uf6E7E/d5wXpGEYJOuG7g==",
+      "type": "package",
+      "path": "visualbasic.powerpacks.vs/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/Microsoft.VisualBasic.PowerPacks.Vs.dll",
+        "lib/Microsoft.VisualBasic.dll",
+        "visualbasic.powerpacks.vs.1.0.0.nupkg.sha512",
+        "visualbasic.powerpacks.vs.nuspec"
+      ]
+    },
+    "UsuariosUTN/1.0.0": {
+      "type": "project",
+      "path": "../UsuariosUTN/UsuariosUTN.csproj",
+      "msbuildProject": "../UsuariosUTN/UsuariosUTN.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0-windows7.0": [
+      "Newtonsoft.Json >= 13.0.1",
+      "UsuariosUTN >= 1.0.0",
+      "VisualBasic.PowerPacks.Vs >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\fabellaiva\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\fabellaiva\\source\\repos\\Parcial I Program II\\UTNFacultad\\UTNFacultad.csproj",
+      "projectName": "UTNFacultad",
+      "projectPath": "C:\\Users\\fabellaiva\\source\\repos\\Parcial I Program II\\UTNFacultad\\UTNFacultad.csproj",
+      "packagesPath": "C:\\Users\\fabellaiva\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\fabellaiva\\source\\repos\\Parcial I Program II\\UTNFacultad\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\fabellaiva\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0-windows"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "projectReferences": {
+            "C:\\Users\\fabellaiva\\source\\repos\\Parcial I Program II\\UsuariosUTN\\UsuariosUTN.csproj": {
+              "projectPath": "C:\\Users\\fabellaiva\\source\\repos\\Parcial I Program II\\UsuariosUTN\\UsuariosUTN.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0-windows7.0": {
+        "targetAlias": "net6.0-windows",
+        "dependencies": {
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[13.0.1, )"
+          },
+          "VisualBasic.PowerPacks.Vs": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App.WindowsForms": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "El paquete \"VisualBasic.PowerPacks.Vs 1.0.0\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net6.0-windows7.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
+      "libraryId": "VisualBasic.PowerPacks.Vs",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    }
+  ]
+}
