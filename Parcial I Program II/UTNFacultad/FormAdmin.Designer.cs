@@ -60,6 +60,8 @@
             this.btn_CambiarEstado = new System.Windows.Forms.Button();
             this.btn_InscribirAlumno = new System.Windows.Forms.Button();
             this.btn_AsignarMateriaAlumno = new System.Windows.Forms.Button();
+            this.rch_listaMaterias = new System.Windows.Forms.RichTextBox();
+            this.rch_ListaAlumnos = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nm_legajoProfesor)).BeginInit();
             this.SuspendLayout();
             // 
@@ -463,12 +465,40 @@
             this.btn_AsignarMateriaAlumno.Visible = false;
             this.btn_AsignarMateriaAlumno.Click += new System.EventHandler(this.btn_AsignarMateriaAlumno_Click);
             // 
+            // rch_listaMaterias
+            // 
+            this.rch_listaMaterias.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.rch_listaMaterias.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rch_listaMaterias.ForeColor = System.Drawing.Color.LightGray;
+            this.rch_listaMaterias.Location = new System.Drawing.Point(629, 130);
+            this.rch_listaMaterias.Name = "rch_listaMaterias";
+            this.rch_listaMaterias.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.rch_listaMaterias.Size = new System.Drawing.Size(178, 127);
+            this.rch_listaMaterias.TabIndex = 49;
+            this.rch_listaMaterias.Text = "";
+            this.rch_listaMaterias.Visible = false;
+            // 
+            // rch_ListaAlumnos
+            // 
+            this.rch_ListaAlumnos.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.rch_ListaAlumnos.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rch_ListaAlumnos.ForeColor = System.Drawing.Color.LightGray;
+            this.rch_ListaAlumnos.Location = new System.Drawing.Point(453, 128);
+            this.rch_ListaAlumnos.Name = "rch_ListaAlumnos";
+            this.rch_ListaAlumnos.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.rch_ListaAlumnos.Size = new System.Drawing.Size(170, 127);
+            this.rch_ListaAlumnos.TabIndex = 50;
+            this.rch_ListaAlumnos.Text = "";
+            this.rch_ListaAlumnos.Visible = false;
+            // 
             // FormAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(837, 422);
+            this.Controls.Add(this.rch_ListaAlumnos);
+            this.Controls.Add(this.rch_listaMaterias);
             this.Controls.Add(this.btn_AsignarMateriaAlumno);
             this.Controls.Add(this.btn_InscribirAlumno);
             this.Controls.Add(this.btn_CambiarEstado);
@@ -548,5 +578,7 @@
         private Button btn_CambiarEstado;
         private Button btn_InscribirAlumno;
         private Button btn_AsignarMateriaAlumno;
+        private RichTextBox rch_listaMaterias;
+        private RichTextBox rch_ListaAlumnos;
     }
 }

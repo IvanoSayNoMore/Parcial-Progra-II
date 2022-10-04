@@ -224,7 +224,25 @@ namespace UTNFacultad
             OpcionesAsignarMateria(false);
             OpcionesAltaUsuario(false);
             OpcionesAsignarMateriaAlumno(true);
+            List<Materia> materias;
+            List<Usuario> alumnos;
+            materias = LogicaUTNAvellaneda.ListaMaterias();
+            alumnos = LogicaUTNAvellaneda.ListarAlumnos();
+            StringBuilder materiasListadas = new StringBuilder();
+            StringBuilder alumnosListadas = new StringBuilder();
+            foreach (Materia item in materias)
+            {
+                materiasListadas.AppendLine(item.MostrarDatosDeMateria());
+            }
+            foreach (Usuario item in alumnos)
+            {
+                alumnosListadas.AppendLine(item.MostrarDatosUsr());
+            }
 
+            rch_ListaAlumnos.Text = alumnosListadas.ToString();
+
+
+            rch_listaMaterias.Text = materiasListadas.ToString();
         }
 
         private void btn_AsignarMateriaAlumno_Click(object sender, EventArgs e)
@@ -239,8 +257,7 @@ namespace UTNFacultad
                     {
                         if (auxMateria + (long)nm_legajoProfesor.Value)
                         {
-                            MessageBox.Show($"Se ha inscripto a la materia {auxMateria.Nombre_De_Materia} ");
-                             
+                            MessageBox.Show($"Se ha inscripto a la materia {auxMateria.Nombre_De_Materia} ");                             
                         }
                         else
                         {
@@ -254,16 +271,24 @@ namespace UTNFacultad
 
                     }
                 }
+                else
+                {
+                    MessageBox.Show("La materia no existe ");
+
+                }
             }
 
         }
 
         private void OpcionesAsignarMateriaAlumno(bool condicion)
         {
+
+            rch_ListaAlumnos.Visible = condicion;
             nm_legajoProfesor.Visible = condicion;
             txb_NombreMateria.Visible = condicion;
             btn_AsignarMateriaAlumno.Visible = condicion;
             lbl_legajo.Visible = condicion;
+            rch_listaMaterias.Visible = condicion;
         }
 
         private void OpcionesCambioEstadoAlumno(bool condicion)

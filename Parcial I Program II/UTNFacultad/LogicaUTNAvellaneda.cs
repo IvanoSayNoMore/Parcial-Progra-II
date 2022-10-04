@@ -289,6 +289,19 @@ namespace UTNFacultad
             return lista;
         }
 
+        public static List<Usuario> ListarAlumnos()
+        {
+            List<Usuario> lista = new List<Usuario>();
+
+            foreach (TipoUsuario item in _listaUsuarios)
+            {
+                if (item.TipoUsuarix == ETiposUsuarios.Alumno)
+                {
+                    lista.Add(item);
+                }
+            }
+            return lista;
+        }
         public static Usuario BuscaProfesorPorLegajo(long legajo)
         {
             Usuario usuario = null ;
