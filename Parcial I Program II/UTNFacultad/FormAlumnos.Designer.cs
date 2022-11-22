@@ -104,6 +104,7 @@
             this.tbx_NombreUsuario.Name = "tbx_NombreUsuario";
             this.tbx_NombreUsuario.Size = new System.Drawing.Size(144, 16);
             this.tbx_NombreUsuario.TabIndex = 10;
+            this.tbx_NombreUsuario.TextChanged += new System.EventHandler(this.tbx_NombreUsuario_TextChanged);
             // 
             // lbl_usuario
             // 

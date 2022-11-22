@@ -8,48 +8,63 @@ namespace UsuariosUTN.Usuarios
 {
     public class Examen
     {
-        private string _materia;
-        private EParcialesPromedio _parcialesPromedio;
-        private decimal _nota;
-        private long _legajoALumno;
-        private long _legajoProfesor;
-        string _fecha;
-        public Examen(string fecha,string materia,long legajoProfesor, long legajoAlumno,decimal nota,
-            EParcialesPromedio tipo) 
-        {
-            _parcialesPromedio = tipo;            
-            _materia = materia;
-            _legajoProfesor = legajoProfesor;
-            _legajoALumno = legajoAlumno;
-            _nota = nota;
-            _fecha = fecha;
-        }
      
-        public EParcialesPromedio TipoParcial
+        private string _apellidoEstudiante;
+        private string _nombreEstudiante;
+        private string _nombreMateria;
+        private string _cuatrimestre;
+        private DateTime _fecha;
+        private decimal _nota;
+        private int _idEstudiante;
+        private int _idAlumno;
+        private int _idPeriodo;
+        private int _idMatter;
+        private int _tipoParcial;
+
+
+        public Examen(int idAlumno, DateTime fecha, int idPeriodo, decimal nota, int idMatter,int idTipoParcial)
         {
-            get { return _parcialesPromedio; }           
-        }
-        public long LegajoAlumno
+            _tipoParcial = idTipoParcial;
+            _idAlumno = idAlumno;
+            _fecha = fecha;
+            _idPeriodo = idPeriodo;
+            _nota = nota;
+            _idMatter = idMatter;
+        }//para insert
+
+
+        public Examen(int idEstudiante,string apellidoEstudiante, 
+            string nombreEstudiante, string nombreMateria, string cuatrimestre, DateTime fecha, decimal nota,int idTipoParcial)
         {
-            get { return _legajoALumno; }
+            _idEstudiante = idEstudiante;
+            _apellidoEstudiante = apellidoEstudiante;
+            _nombreEstudiante = nombreEstudiante;
+            _nombreMateria = nombreMateria;
+            _cuatrimestre = cuatrimestre;
+            _fecha = fecha;
+            _nota = nota;
+            _tipoParcial = idTipoParcial;
         }
-        public long LegajoProfesor
+
+        public override string ToString()
         {
-            get { return _legajoProfesor; }
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Materia: {NombreMateria}");
+            sb.AppendLine($"Nota: {Nota}");
+
+            return sb.ToString();
         }
-        public decimal Nota
-        {
-            get { return _nota; }
-             
-        }
-        public string Materia
-        {
-            get { return _materia; }
-        }
-        public string Fecha
-        {
-            get { return _fecha; }
-        }
- 
+
+        public string ApellidoEstudiante { get => _apellidoEstudiante;  }
+        public string NombreEstudiante { get => _nombreEstudiante;  }
+        public string NombreMateria { get => _nombreMateria;  }
+        public string Cuatrimestre { get => _cuatrimestre;  }
+        public DateTime Fecha { get => _fecha;}
+        public decimal Nota { get => _nota; }
+        public int IdEstudiante { get => _idEstudiante; set => _idEstudiante = value; }
+        public int IdAlumno { get => _idAlumno;  }
+        public int IdPeriodo { get => _idPeriodo;  }
+        public int IdMatter { get => _idMatter; }
+        public int TipoParcial { get => _tipoParcial;  }
     }
 }

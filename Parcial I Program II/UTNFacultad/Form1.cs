@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using UsuariosUTN.Clases;
 using UsuariosUTN.Usuarios;
 
 namespace UTNFacultad
@@ -9,11 +10,55 @@ namespace UTNFacultad
         public formLogIn()
         {
             InitializeComponent();
+
         }
+
         [DllImport("user32.dll", EntryPoint = "ReleaseCapture")]
         private extern static void ReleaseCapture();
         [DllImport("user32.dll", EntryPoint = "SendMessage")]
         private extern static void SendMessage (IntPtr hWnd, int Msg, int wParam, int lParam);
+
+        private void btnIn_Click(object sender, EventArgs e)
+        {
+
+         
+            TipoUsuario auxUsuario = LogicaUTNAvellaneda.logUsr(txtUsr.Text, txtPas.Text);
+
+            if (auxUsuario is not null)
+            {
+                if (auxUsuario.TipoUsuarix == UsuariosUTN.Enums.ETiposUsuarios.Alumno)
+                {
+                    FormAlumnos formAlumnos = new FormAlumnos();
+                    formAlumnos.setUsuario = auxUsuario;
+                    formAlumnos.Show();
+                   
+                    txtUsr.Text = ""; txtPas.Text = "";
+                }
+
+                if (auxUsuario.TipoUsuarix == UsuariosUTN.Enums.ETiposUsuarios.Profesor)
+                {
+                    FormProfesor formProfesor = new FormProfesor();
+                    formProfesor.setGetUsuario = auxUsuario;
+                    formProfesor.Show();
+                    txtUsr.Text = ""; txtPas.Text = "";
+                }
+
+                if (auxUsuario.TipoUsuarix == UsuariosUTN.Enums.ETiposUsuarios.Admin)
+                {
+                    FormAdmin formAdmin = new FormAdmin();
+                    formAdmin.setGetUsuario = auxUsuario;
+                    formAdmin.Show();
+                    txtUsr.Text = ""; txtPas.Text = "";
+                }
+            }
+            else
+            {
+                MessageBox.Show("Error al ingresar ");
+            }
+            //. this.Hide();
+
+        }
+
 
         private void txtUsr_Enter(object sender, EventArgs e)
         {
@@ -51,43 +96,8 @@ namespace UTNFacultad
 
             }
         }
-        private void btnIn_Click(object sender, EventArgs e)
-        {
-            long legajoAlumno;
-            TipoUsuario auxUsuario = LogicaUTNAvellaneda.logUsr(txtUsr.Text, txtPas.Text);
-            
-            if(auxUsuario is not null)
-            {
-                legajoAlumno = auxUsuario.Legajo;
-                if (auxUsuario.TipoUsuarix == UsuariosUTN.Enums.ETiposUsuarios.Alumno)
-                {                   
-                    FormAlumnos formAlumnos = new FormAlumnos();
-                    formAlumnos.setUsuario = auxUsuario;
-                    formAlumnos.Show();                    
-                    txtUsr.Text = ""; txtPas.Text = "";
-                }
-                if (auxUsuario.TipoUsuarix == UsuariosUTN.Enums.ETiposUsuarios.Profesor)
-                {
-                    FormProfesor formProfesor = new FormProfesor();
-                    formProfesor.setUsuario = auxUsuario;
-                    formProfesor.Show();
-                    txtUsr.Text = ""; txtPas.Text = "";
-                }
-                if (auxUsuario.TipoUsuarix == UsuariosUTN.Enums.ETiposUsuarios.Admin)
-                {
-                    FormAdmin formAdmin= new FormAdmin();
-                  //  formProfesor.setUsuario = auxUsuario;
-                    formAdmin.Show();
-                    txtUsr.Text = ""; txtPas.Text = "";
-                }
-            }
-            else
-            {
-                MessageBox.Show("Error al ingresar ");
-            }
-           //. this.Hide();
-             
-        }
+        
+
         private void btnCanc_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -107,24 +117,29 @@ namespace UTNFacultad
 
         private void radioAlumno_CheckedChanged(object sender, EventArgs e)
         {
-            txtUsr.Text = "a";
-            txtPas.Text = "a";
+            txtUsr.Text = "uno";
+            txtPas.Text = "pass";
             txtPas.UseSystemPasswordChar = true;
         }
 
         private void radioProfe_CheckedChanged(object sender, EventArgs e)
         {
 
-            txtUsr.Text = "c";
-            txtPas.Text = "c";
+            txtUsr.Text = "profe1";
+            txtPas.Text = "pass";
             txtPas.UseSystemPasswordChar = true;
         }
 
         private void radioAdmin_CheckedChanged(object sender, EventArgs e)
         {
-            txtUsr.Text = "z";
-            txtPas.Text = "z";
+            txtUsr.Text = "adminis";
+            txtPas.Text = "adminiss";
             txtPas.UseSystemPasswordChar = true;
+        }
+
+        private void formLogIn_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿public enum EParcialesPromedio
 {
+    vacio,
     pParcial,
     sParcial,
-    promedio,
-    vacio
+    promedio
+   
 }

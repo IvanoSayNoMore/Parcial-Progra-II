@@ -10,6 +10,6 @@ namespace UsuariosUTN.Enums
         Admin,
         Profesor,
         Alumno,
-        vacio
+        NULL
     }
 }

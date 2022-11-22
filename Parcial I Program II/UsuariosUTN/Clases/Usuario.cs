@@ -13,40 +13,43 @@ namespace UsuariosUTN.Usuarios
         private string _apellido;
         private string _contrasenia;
         private string _usuario;
-        private long _legajo;
+        private int _legajo;
 
-        protected Usuario(string nombre,string apellido,string usuario,string contrasenia,long legajo)
+        protected Usuario(string nombre,string apellido,string usuario,int legajo)
         {
             _nombre = nombre;
             _apellido = apellido;
-            _contrasenia = contrasenia;
             _usuario = usuario;
             _legajo = legajo;
         }
 
-        public virtual string MostrarDatosUsr()
+        protected Usuario(string nombre,string apellido,string usuario,string contrasenia,int legajo):this(nombre,apellido,usuario,legajo)
+        {            
+            _contrasenia = contrasenia;
+       
+        }
+
+        public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("---Usuario---");
-            sb.AppendLine($"Nombre : {_nombre}");
-            sb.AppendLine($"Apellido: {_apellido}");
-            sb.AppendLine($"Legajo : {_legajo}");
-
-
+            sb.AppendLine($"{_nombre} ");
+            sb.AppendLine($"{_apellido} ");
+            sb.AppendLine($" {_legajo} ");
             return sb.ToString();
         }
 
+
         #region
+        public string Contraseña
+        {
+            get { return _contrasenia; }
+        }
         public string NombreUsuario
         {
             get { return _usuario; }
             set { _usuario = value; }
         }
-        public string Contrasenia
-        {
-            get { return _contrasenia; }
-            set { _contrasenia = value; }
-        }
+
         public string Nombre
         {
             get { return _nombre; }
@@ -59,7 +62,7 @@ namespace UsuariosUTN.Usuarios
             set { _apellido = value; }
         }
 
-        public long Legajo
+        public int Legajo
         {
             get { return _legajo; }
         }

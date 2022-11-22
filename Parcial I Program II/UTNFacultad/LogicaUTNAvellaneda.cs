@@ -6,65 +6,105 @@ using System.Text;
 using System.Threading.Tasks;
 using UsuariosUTN.Clases;
 using UsuariosUTN.Enums;
+using UsuariosUTN.Generics;
 using UsuariosUTN.Usuarios;
 
 namespace UTNFacultad
 {
     static class LogicaUTNAvellaneda
     {
+        static List<Clase> _aulas;
         static List<Usuario> _listaUsuarios;
         static List<Materia> _materias;
         static List<Examen> _examenes;
-        static List<NotasAlumno> _notasAlumnos;
+        static List<DatosAlumno> _datosAlumnos;
+        static List<Materia> _materiasDeAlumnos;
+        static UsuariosGeneric<TipoUsuario> _usuariosGeneric;
+
+        public static UsuariosGeneric<TipoUsuario> UsuariosGeneric { get => _usuariosGeneric; set => _usuariosGeneric = value; }
+
         static LogicaUTNAvellaneda()
         {
             _listaUsuarios = new List<Usuario>();
             _materias = new List<Materia>();
+            _materiasDeAlumnos = new List<Materia>();
             _examenes = new List<Examen>();
-            _notasAlumnos = new List<NotasAlumno>();
-            HardCode();
+            _datosAlumnos = new List<DatosAlumno>();
+            _aulas = new List<Clase>();
+            HardUsr();
+           
         }
-        private static void HardCode()
+
+        public static void HardUsr()
         {
-            bool aux;
-            Usuario admin = new TipoUsuario("z", "z", "z", "z", 1005, ETiposUsuarios.Admin);
-            Usuario ivan = new TipoUsuario("Ivan", "Fabella", "a", "a", 1001, ETiposUsuarios.Alumno);
-            Usuario aldana = new TipoUsuario("Aldana", "Medina", "b", "b", 1002, ETiposUsuarios.Alumno);
-            Usuario prof = new TipoUsuario("Profesor", "Profesor", "c", "c", 1003, ETiposUsuarios.Profesor);
-            
-            LogicaUTNAvellaneda.AgregarUsuarioALista(prof);
-            LogicaUTNAvellaneda.AgregarUsuarioALista(ivan);
-            LogicaUTNAvellaneda.AgregarUsuarioALista(aldana);
-            LogicaUTNAvellaneda.AgregarUsuarioALista(admin);
+            _listaUsuarios = UsuarioDao.ListarTodosUsuarios();
+            _usuariosGeneric = _listaUsuarios;// public static implicit operator UsuariosGeneric<T>(List<Usuario> v)
 
-            Examen exam = new Examen("19/04/1993","Ingles", prof.Legajo, ivan.Legajo, 10, EParcialesPromedio.pParcial);
+        }
 
-            NotasAlumno nuevasNotas = new NotasAlumno(exam.Materia, ivan.Legajo);
-            nuevasNotas.estadoCursada = EEstadoCursada.Regular;
-            nuevasNotas.AgregarNota(exam.Nota, exam.TipoParcial);
-
-            LogicaUTNAvellaneda.AgregaNotasAlumno(nuevasNotas);
-            Materia mat0 = new Materia("Matematica", 1, "No tiene");
-            Materia mat = new Materia("Matematica II", 1, "Matematica");
-            Materia mat2 = new Materia("Ingles II", 1, "Ingles");
-            Materia mat3 = new Materia("Laboratorio II", 1, "Laboratorio");
-            //aux = mat + alum.Legajo;
-            aux = mat2 + ivan.Legajo;//agrega alumno a materia 
-            aux = mat2 + aldana.Legajo;
-
-            if (mat+prof)
+        public static void HardCodeAulas()
+        {
+            try
             {
-                Console.WriteLine("Se agrego ok ");
+                _aulas = ClaseDao.ListarClasesMateriasDisponibles();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Error al cargar las materias{ex.Message}");
+            }
+            
+        }
+
+        public static void HardCode()
+        {
+            try
+            {
+                _materias = MateriasDao.ListaMaterias();//nombre y id
+
+                _materiasDeAlumnos = MateriasDao.ListaMateriasDeAlumnos();
+
+                _datosAlumnos = DatosAlumnoDao.ListarHistoriasAlumnos();
+
+                _examenes = ExamenDao.ListaExamenes();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Error al cargar listas ");
             }
 
-            //Materia.DarAsistencia(mat, ivan.Legajo);
-            _materias.Add(mat0);
-            _materias.Add(mat);
-            _materias.Add(mat2);
-            _materias.Add(mat3);
-            _examenes.Add(exam);      
         }
-     
+        
+        public static bool ValidaIngresoExamen(Examen examen,int idClassroom)
+        {
+            bool retorno = false;
+            if(examen is not null && idClassroom >0)
+            {
+                foreach (DatosAlumno item in _datosAlumnos)
+                {
+                    if (item.LegajoAlumno == examen.IdAlumno
+                        && item.IdMateria == examen.IdMatter
+                        && item.EstadoMateria == 0
+                        && item.IdClassroom == idClassroom)
+                    {
+                        foreach (Examen itemE in _examenes)
+                        {
+                            if (itemE.TipoParcial != examen.TipoParcial)
+                            {
+                                retorno = true;
+                                break;
+                            }
+                        }
+                        break;
+
+                    }
+                }
+            }
+
+
+            return retorno;
+
+        }
+
         public static TipoUsuario logUsr(string nombre, string pass)
         {
             TipoUsuario usr = null;
@@ -73,7 +113,7 @@ namespace UTNFacultad
             {
                 foreach (TipoUsuario usuario in _listaUsuarios)
                 {
-                    if (usuario.NombreUsuario == nombre && usuario.Contrasenia == pass)
+                    if (usuario.NombreUsuario == nombre && usuario.Contraseña == pass)
                     {
                         usr = usuario;
                         break;
@@ -93,19 +133,159 @@ namespace UTNFacultad
             }
             return retorno;
         }
-       
-        public static bool CrearMateria(string nombreMateria, int cuatrimestre, 
-                                        string mCarroletaiva)
+
+        public static Materia BuscaMateriaPorId(int id)
+        {
+            Materia materia = null;
+            foreach (Materia item in _materias)
+            {
+                if (item.IdMateria == id)
+                {
+                    materia = item;
+                    break;
+                }
+            }
+            return materia;
+        }
+
+        public static bool ValidaCorrelativaAprobada(Materia mat, int legajoAlumno)
         {
             bool retorno = false;
+
+            if(mat.Id_Correlativa == 0)
+            {
+                retorno=true;
+            }
+            else
+            {
+                foreach (DatosAlumno item in _datosAlumnos)
+                {
+                    if (item.LegajoAlumno == legajoAlumno
+                        && item.IdMateria == mat.Id_Correlativa
+                        && item.EstadoMateria == 1)
+                    {
+                        retorno = true;
+                    }
+
+                }
+            }
+            return retorno;
+        }
+
+        public static List<Clase> ListarClasesParaAlumno()
+        {
+            List<Clase> clases = new List<Clase>();
+
+            if (_aulas != null)
+            {
+                foreach (Clase item in _aulas)
+                {
+                    clases.Add(new Clase(
+                        item.IdMateria,
+                        item.IdProfesor,
+                        item.IdClassroom,
+                        item.Classroom,
+                        item.Materia,
+                        item.Profesor,
+                        item.Period));
+                }
+            }
+            return clases;
+
+        }
+
+        public static List<Clase> ListarClasesDeProfesor(TipoUsuario usuario)
+        {
+            List<Clase> clases = new List<Clase>();
+
+            if (_aulas != null)
+            {
+                foreach (Clase item in _aulas)
+                {
+                    if(item.IdProfesor == usuario.Legajo || (usuario.TipoUsuarix == ETiposUsuarios.Admin))
+                    {
+                        clases.Add(new Clase(
+                                item.IdMateria,
+                                item.IdProfesor,
+                                item.IdClassroom,
+                                item.Classroom,
+                                item.Materia,
+                                item.Profesor,
+                                item.Period));
+                    }
+
+                }
+            }
+            return clases;
+
+        }
+
+        public static List<Examen> ListaExamenesDeUnAlumno(int id)
+        {
+            List<Examen> examenes = new List<Examen>();
+            foreach(Examen item in _examenes)
+            {
+                if(item.IdEstudiante == id)
+                {
+                    examenes.Add(item);
+                }
+            }
+            return examenes;
+        }
+
+        public static List<Materia> ListaMateriasDeUnAlumno(int idAlumno)
+        {
+            List<Materia> listaMateriasAlumno = new List<Materia>();
+
+            foreach(Materia item in _materiasDeAlumnos)
+            {
+                if (item.IdAlumno == idAlumno)
+                { 
+                    
+                    listaMateriasAlumno.Add(item);
+                }
+            }
+            return listaMateriasAlumno;
+        }
+
+        public static bool BuscaSiAlumnoCursaMateria(int idAlumno,int idMateria)
+        {
+            bool retorno = false;
+            foreach (Materia item in _materiasDeAlumnos)
+            {
+                if (item.IdMateria==idMateria && item.IdAlumno == idAlumno)
+                {
+                    retorno = true;
+                    break;
+                }
+            }
+            return retorno;
+        }
+
+
+        public static bool CrearMateria(string nombreMateria,
+                                int mCarroletaiva)
+        {
+            bool retorno = true;
+            Materia mat = new Materia(nombreMateria, mCarroletaiva);
             if (nombreMateria != null)
             {
-
-                if(BuscaMateriaEnLista(nombreMateria,cuatrimestre,_materias)is not null)
+                if(_materias.Contains(mat))
                 {
-                    _materias.Add(new Materia(nombreMateria, cuatrimestre, mCarroletaiva));
-                    retorno = true;
-                }             
+                    retorno = false;
+                }
+                if(retorno)
+                {
+                    try
+                    {
+                        MateriasDao.Insert(new Materia(nombreMateria, mCarroletaiva));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error en BD al cargar materias");
+                    }
+               
+                }
             }
             return retorno;
         }
@@ -114,321 +294,34 @@ namespace UTNFacultad
         public static bool AgregaExamenALista(Examen nuevoExamen)
         {
             bool retorno = false;
-            if(!_examenes.Contains(nuevoExamen))
+            if(nuevoExamen != null)
             {
-                _examenes.Add(nuevoExamen);
+                ExamenDao.Insert(nuevoExamen);
                 retorno = true;
-            }
+            }      
+
             return retorno;
         }
 
-        public static bool AgregaNotasAlumno(NotasAlumno notaMateria)
+        public static bool AgregarUsuarioALista(TipoUsuario usr)
         {
             bool retorno = false;
-
-            if(!_notasAlumnos.Contains(notaMateria))
-            {
-                _notasAlumnos.Add(notaMateria);
-                retorno = true;
-            }
-            return retorno;
-        }
-
-        public static bool AgregarUsuarioALista(Usuario usr)
-        {
-            bool retorno = false;
-
-            if (!_listaUsuarios.Contains(usr))
-            {
-                _listaUsuarios.Add(usr);
-                retorno = true;
-            }
-            return retorno;
-        }
-
-        public static string MostrarNotasPorAlumno(Usuario Alumno)
-        {
-            bool flagNota = false;
-            StringBuilder sb = new StringBuilder();
-
-            foreach(NotasAlumno item in _notasAlumnos)
-            {
-                if(item.LegajoAlumno == Alumno.Legajo)
-                {
-                    sb.AppendLine($"Materia {item.Materia}");
-
-                    if (item.PrimerParcial != -1)
-                    {
-                        sb.AppendLine($"Primer Parcial{item.PrimerParcial}");
-                    }
-                    if(item.SegundoParcial != -1)
-                    {
-                        sb.AppendLine($"Segundo Parcial {item.SegundoParcial}");
-                        sb.AppendLine($"Promedio {item.Promedio}");
-                    }
-                    
-                    flagNota = true;
-                }
-            }
-            if (!flagNota)
-            {
-                sb.AppendLine("No se encontraron examenes del alumno B");
-            }
-            return sb.ToString();
-        }
-
-        public static string MostrarExamenPorAlumno(Usuario Alumno)
-        {
-            bool flagNota = false;
-            StringBuilder sb = new StringBuilder();
-            
-            foreach (Examen item in _examenes)
-            {
-
-                //Mostrar datos personales del alumno
-                if (item.LegajoAlumno == Alumno.Legajo)
-                {
-                    sb.AppendLine($"Materia {item.Materia}");
-
-                    if(item.TipoParcial.ToString() == "pParcial")
-                    {
-                        sb.Append("Primer Parcial");
-                    }
-                    else
-                    {
-                        if (item.TipoParcial.ToString() == "sParcial")
-                        {
-                            sb.Append("Segundo Parcial");
-                        }
-                        else
-                        {
-                            sb.Append("Promedio");
-                        }
-                    }
-                    sb.AppendLine($", nota: {item.Nota}");
-                    flagNota = true;
-                }
-            }
-          
-            if (!flagNota)
-            {
-                sb.AppendLine("No se encontraron examenes del alumno");
-            }
-            return sb.ToString();
-        }
-      
-        public static List<Materia> ListarMarteriasAlumno(long legajousr)
-        {
-            List<Materia> auxLista = new List<Materia>();
-            foreach(Materia item in _materias)
-            {
-                if (item==legajousr)
-                {
-                    auxLista.Add(item);
-                }
-            }       
-
-            return auxLista;
-
-        }
-
-        public static List<Materia> ListarMarteriasProfesor(Usuario profesor)
-        {
-            List<Materia> auxLista = new List<Materia>();
-            foreach (Materia item in _materias)
-            {
-                if (item == profesor)
-                {
-                    auxLista.Add(item);
-                }
-            }
-
-            return auxLista;
-
-        }
-       
-        public static List<Materia> ListaMaterias()
-        {
-            List<Materia> lista;
-            if (_materias.Count > 0)
-            {
-                lista = _materias;
-            }
-            else
-            {
-                lista = null;
-            }
-
-            return lista;
-        }
-
-        public static List<Materia> ListaMateriasSinProfesor()
-        {
-            List<Materia> lista = new List<Materia>();
-            foreach (Materia item in _materias)
-            {
-                if(item.FlagProfe == false)
-                {
-                    lista.Add(item);
-                }
-            }
-            return lista;
-        }
-        
-        public static List<Usuario> ListarProfesores()
-        {
-            List<Usuario> lista = new List<Usuario>();
+            bool bandera = true;
 
             foreach(TipoUsuario item in _listaUsuarios)
             {
-                if(item.TipoUsuarix == ETiposUsuarios.Profesor)
+                if(item.NombreUsuario == usr.NombreUsuario && item.Apellido == usr.Apellido)
                 {
-                    lista.Add(item);
+                    bandera = false;
                 }
             }
-            return lista;
-        }
-
-        public static List<Usuario> ListarAlumnos()
-        {
-            List<Usuario> lista = new List<Usuario>();
-
-            foreach (TipoUsuario item in _listaUsuarios)
-            {
-                if (item.TipoUsuarix == ETiposUsuarios.Alumno)
-                {
-                    lista.Add(item);
-                }
-            }
-            return lista;
-        }
-        public static Usuario BuscaProfesorPorLegajo(long legajo)
-        {
-            Usuario usuario = null ;
-            foreach(TipoUsuario item in _listaUsuarios)
-            {
-                if(item.Legajo == legajo && item.TipoUsuarix == ETiposUsuarios.Profesor)
-                {
-                    usuario = item;
-                }
-            }
-            return usuario;
-        }
-
-        public static Materia BuscaMateriaPorNombre(string nombre)
-        {
-            Materia auxMateria = null;
-            foreach (Materia materia in _materias)
-            {
-                if (materia.Nombre_De_Materia == nombre)
-                {
-                    auxMateria = materia;
-                }
-            }
-
-            return auxMateria;
-        }
-
-        public static bool BuscarUsuarioEnLista(string user)// Verifica si el legajo ya existe en la lista de uusarios
-        {
-            bool retorno = false;
-
-            if (user is not null)
-            {
-                foreach (Usuario item in _listaUsuarios)
-                {
-                    if (item.NombreUsuario == user)
-                    {                        
-                        retorno = true;
-                        break;
-                    }
-                }
+            if(bandera)
+            {                
+                retorno = UsuarioDao.Insert(usr);
             }
             return retorno;
         }
+ 
 
-        public static bool BuscaAlumnoPorLegajo(long legajo)
-        {
-            bool retorno = false;
-
-            if(legajo > 0)
-            {
-                foreach (TipoUsuario item in _listaUsuarios)
-                {
-                    if (item.Legajo == legajo && item.TipoUsuarix == ETiposUsuarios.Alumno)
-                    {
-                        retorno=true;
-                        break;
-                    }
-                }
-
-            }
-
-            return retorno;
-        }
-
-        public static Materia BuscaMateriaEnLista(string materia,int cuatrimestre, List<Materia> lista)
-        {
-            bool retorno = false;
-            Materia auxMateria = null;
-            foreach (Materia item in lista)
-            {
-                if (item.Nombre_De_Materia == materia && item.Cuatrimestre == cuatrimestre)
-                {
-                    auxMateria = item;
-                    break;
-                }
-            }
-            return auxMateria;
-        }
-
-        public static NotasAlumno RetornaNotasAlumnoMateria(string materia, long legajoAlumno)
-        {
-            NotasAlumno auxNotas = null;
-
-            foreach(NotasAlumno item in _notasAlumnos)
-            {
-                if(item == legajoAlumno && item == materia)
-                {
-                    auxNotas = item;
-                    break;
-                }
-            }
-
-            return auxNotas;
-        }
-
-        public static bool CambiaEstadoNotasAlumnoMateria(string materia, long legajoAlumno, EEstadoCursada estado)
-        {
-            bool retorno = false;
-
-            foreach (NotasAlumno item in _notasAlumnos)
-            {
-                if (item.LegajoAlumno == legajoAlumno && item.Materia == materia)
-                {
-                    item.estadoCursada = estado;
-                    retorno = true;
-                    break;
-                }
-            }
-
-            return retorno;
-        }
-
-        public static bool ValidaCorrelativaAprobada(Materia mat, long legajoAlumno)
-        {
-            bool retorno = false;
-            foreach(NotasAlumno item in _notasAlumnos)
-            {
-                if(item.LegajoAlumno == legajoAlumno
-                    && item.Materia == mat.Correlativa && item.EstadoMateria == EEstadoMateria.Aprobada || mat.Correlativa == "No tiene")
-                {
-                    retorno = true;
-                    break;
-                }
-            }
-
-            return retorno;
-        }
     }
 }

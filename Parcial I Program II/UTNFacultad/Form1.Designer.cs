@@ -168,6 +168,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.formLogIn_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.formLogIn_MouseDown);
             this.ResumeLayout(false);
             this.PerformLayout();

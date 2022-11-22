@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,20 +22,45 @@ namespace UTNFacultad
         private extern static void SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
 
-        Usuario profesor;
+        TipoUsuario profesor;
         private static int _cuatrimestre = -1;
-        EParcialesPromedio eParciales = EParcialesPromedio.vacio;
-        
+        EParcialesPromedio eParciales = EParcialesPromedio.vacio;        
         List<Materia> listaMaterias;
+        List<Clase> listClases;
 
         public FormProfesor()
         {
             InitializeComponent();
+            LogicaUTNAvellaneda.HardCode();
+            LogicaUTNAvellaneda.HardCodeAulas();
+ 
         }
 
-        public Usuario setUsuario
+
+        private void FormProfesor_Load(object sender, EventArgs e)
         {
+            StringBuilder sb = new StringBuilder();
+            listClases = LogicaUTNAvellaneda.ListarClasesDeProfesor(setGetUsuario);
+            if(listClases is not null)
+            {
+                sb.AppendLine("Materias Asignadas: ");
+                foreach (Clase materia in listClases)
+                {
+                    sb.Append(materia.Classroom);
+                    sb.AppendLine(materia.Materia);
+                    
+                }
+
+                rtb_materiasAsignadas.Text = sb.ToString();
+                rtb_materiasAsignadas.Visible = true;
+            }
+        }
+
+        public TipoUsuario setGetUsuario
+        {
+
             set { profesor = value; }
+            get { return profesor; }
         }
 
         private void btn_salir_Click(object sender, EventArgs e)
@@ -44,179 +70,96 @@ namespace UTNFacultad
 
         private void btn_crearExamen_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-
-            listaMaterias = LogicaUTNAvellaneda.ListarMarteriasProfesor(profesor);
-            if(listaMaterias is not null)
-            {
-                sb.AppendLine("Materias Asignadas: ");
-                foreach (Materia materia in listaMaterias)
-                {
-                    sb.AppendLine(materia.Nombre_De_Materia);
-                }
-                CambiaVistaMateriasAsignadas(true);
-
-               
-                rtb_materiasAsignadas.Text = sb.ToString();
-            }
+            CrearExamen crearExamen = new CrearExamen();
+            crearExamen.setUsuario = setGetUsuario;
+            crearExamen.Show();
         }
 
         private void btn_Concretar_Click(object sender, EventArgs e)
         {            
-            Examen auxExamen;
-            NotasAlumno auxNotasAllumno;   
-           
+            //Examen auxExamen;
+            //DatosAlumno auxNotasAllumno;
+    
+            //try
+            //{
+            //    auxExamen = new Examen(
+            //        ((Usuario)cbAlumnos.SelectedItem).Legajo,
+            //        Convert.ToDateTime(txt_fecha.Text),
+            //        ((Periodos)cbPeriodo.SelectedItem).IdPeriodo,
+            //        nm_Nota.Value,
+            //        ((Clase)cbMaterias.SelectedItem).IdMateria,
+            //        ((TiposParciales)cbTipoParcial.SelectedItem).Id);
+                
+            //    ExamenDao.Insert(auxExamen);
 
-            if (txb_materia.Text != "MATERIA" && eParciales != EParcialesPromedio.vacio && txt_fecha.Text != "FECHA"
-                && _cuatrimestre != -1)
-            {
-                          
-                if(LogicaUTNAvellaneda.BuscaMateriaEnLista(txb_materia.Text, _cuatrimestre,
-                    LogicaUTNAvellaneda.ListarMarteriasProfesor(profesor) ) is not null)
-                {
-                    if (LogicaUTNAvellaneda.BuscaAlumnoPorLegajo((long)nm_legajoAlumno.Value))
-                    {
+            //    MessageBox.Show($"Se dio de alta el examen para la materia {((Clase)cbMaterias.SelectedItem).Materia} " +
+            //    $"Del  {StringTipoParcial(eParciales)} con fecha {txt_fecha.Text}");
 
-                        auxExamen = new Examen(txt_fecha.Text, txb_materia.Text, profesor.Legajo,
-                             (long)nm_legajoAlumno.Value, nm_Nota.Value, eParciales);
+            //    CambiaVistaMateriasAsignadas(false);
 
-                        auxNotasAllumno = LogicaUTNAvellaneda.RetornaNotasAlumnoMateria(txb_materia.Text, (long)nm_legajoAlumno.Value);
+            //}
+            //catch(Exception ex)
+            //{
+            //    MessageBox.Show($"Error. Faltan cargar datos");
+            //}
+            //finally
+            //{
 
-                        if (auxNotasAllumno is not null)
-                        {
-                            if (auxNotasAllumno.AgregarNota(nm_Nota.Value, eParciales))
-                            {
-                                MessageBox.Show("Se agrego la nota parcial al alumno");
-                            }
-                            else
-                            {
-                                MessageBox.Show("El alumno ya tiene una nota para este parcial");
-                            }
-                        }
-                        else
-                        {
-                            auxNotasAllumno = new NotasAlumno(txb_materia.Text, (long)nm_legajoAlumno.Value);
-                            if (LogicaUTNAvellaneda.AgregaNotasAlumno(auxNotasAllumno))
-                            {
-                                MessageBox.Show("Se agrego la materia a la lista de examenes del alumno");
-                            }
-                        }
-
-                        if (LogicaUTNAvellaneda.AgregaExamenALista(auxExamen))
-                        {
-                            MessageBox.Show("Se agrego el examen a la lista de examenes");
-                        } 
-                        
-                        MessageBox.Show($"Se dio de alta el examen para la materia {txb_materia.Text} " +
-                           $"Del  {StringTipoParcial(eParciales)} con fecha {txt_fecha.Text}");
-
-                        CambiaVistaMateriasAsignadas(false);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se encontraron alumnos con el legajo ingresado");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Ingreso una materia inexistente o no asignada");
-                }
-               
-            }
-            else
-            {
-                MessageBox.Show($"Faltan cargar datos");
-            }
-
+            //}         
             
         }
         
-        private string StringTipoParcial(EParcialesPromedio tipo)
-        {
-            string parcialString;
-            if (tipo == EParcialesPromedio.sParcial)
-            {
-                parcialString = "Segundo Parcial";
-            }
-            else
-            {
-                parcialString = "Primer Parcial";
-            }
+        //private string StringTipoParcial(EParcialesPromedio tipo)
+        //{
+        //    string parcialString;
+        //    if (tipo == EParcialesPromedio.sParcial)
+        //    {
+        //        parcialString = "Segundo Parcial";
+        //    }
+        //    else
+        //    {
+        //        parcialString = "Primer Parcial";
+        //    }
 
-            return parcialString;
-        }
+        //    return parcialString;
+        //}
 
-        private void CambiaVistaMateriasAsignadas(bool condicion)
-        {
-            LEGAJO.Visible = condicion;
-            NOTA.Visible = condicion;
-            rtb_materiasAsignadas.Visible = condicion;
-            btn_Concretar.Visible = condicion;
-            rdb_pParcial.Visible = condicion;
-            rdb_Sparcial.Visible = condicion;
-            chk_PrimerCuatr.Visible = condicion;
-            chk_SegundoCuatrimestre.Visible = condicion;
-            txt_fecha.Visible = condicion;
-            txb_materia.Visible = condicion;
-            nm_Nota.Visible = condicion;
-            nm_legajoAlumno.Visible = condicion;
-        }
+        //private void CambiaVistaMateriasAsignadas(bool condicion)
+        //{
+        //    MateriaComision.Visible = condicion;
+        //    cbTipoParcial.Visible = condicion;  
+        //    cbPeriodo.Visible = condicion;
+        //    cbAlumnos.Visible = condicion;
+        //    cbMaterias.Visible = condicion;
+        //    LEGAJO.Visible = condicion;
+        //    NOTA.Visible = condicion;
+        //    rtb_materiasAsignadas.Visible = condicion;
+        //    btn_Concretar.Visible = condicion;
+        //    txt_fecha.Visible = condicion;
+        //    cbAlumnos.Visible = condicion;
+        //    nm_Nota.Visible = condicion;
+        //    cbMaterias.Visible = condicion;
+        //}
+
+
        
-        private void rdb_pParcial_CheckedChanged(object sender, EventArgs e)
-        {
-            eParciales = EParcialesPromedio.pParcial;
-        }
+        //private void txt_fecha_Enter(object sender, EventArgs e)
+        //{
+        //    if (txt_fecha.Text == "FECHA")
+        //    {
+        //        txt_fecha.Text = "";
+        //        txt_fecha.ForeColor = Color.Black;
+        //    }
+        //}
+        //private void txt_fecha_Leave(object sender, EventArgs e)
+        //{
+        //    if (txt_fecha.Text == "")
+        //    {
+        //        txt_fecha.Text = "FECHA";
+        //        txt_fecha.ForeColor = Color.DimGray;
+        //    }
+        //}
 
-        private void rdb_Sparcial_CheckedChanged(object sender, EventArgs e)
-        {
-            eParciales = EParcialesPromedio.sParcial;
-        }
-       
-        private void txt_fecha_Enter(object sender, EventArgs e)
-        {
-            if (txt_fecha.Text == "FECHA")
-            {
-                txt_fecha.Text = "";
-                txt_fecha.ForeColor = Color.Black;
-            }
-        }
-        private void txt_fecha_Leave(object sender, EventArgs e)
-        {
-            if (txt_fecha.Text == "")
-            {
-                txt_fecha.Text = "FECHA";
-                txt_fecha.ForeColor = Color.DimGray;
-            }
-        }
-        private void txb_materia_Enter(object sender, EventArgs e)
-        {
-            if (txb_materia.Text == "MATERIA")
-            {
-                txb_materia.Text = "";
-                txb_materia.ForeColor = Color.Black;
-            }
-        }
-        private void txb_materia_Leave(object sender, EventArgs e)
-        {
-            if (txb_materia.Text == "")
-            {
-                txb_materia.Text = "MATERIA";
-                txb_materia.ForeColor = Color.DimGray;
-            }
-        }
-        private void chk_PrimerCuatr_CheckedChanged(object sender, EventArgs e)
-        {
-            _cuatrimestre = 1;
-            chk_SegundoCuatrimestre.Checked = false;
-
-        }
-
-        private void chk_SegundoCuatrimestre_CheckedChanged(object sender, EventArgs e)
-        {
-
-            _cuatrimestre = 2;
-            chk_PrimerCuatr.Checked = false;
-        }
         private void FormProfesor_MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
@@ -229,6 +172,6 @@ namespace UTNFacultad
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
 
- 
+   
     }
 }

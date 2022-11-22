@@ -12,24 +12,48 @@ namespace UsuariosUTN.Usuarios
     {
         private ETiposUsuarios _tipoUsuario;
 
+        public TipoUsuario(string nombre,string apellido,string usuario,int legajo) : base (nombre,apellido,usuario,legajo)
+        {
+
+        }
         public TipoUsuario(string nombre, string apellido, string usuario, string contrasenia,
-                 long legajo, ETiposUsuarios tipo) : base(nombre, apellido, usuario, contrasenia, legajo)
+                 int legajo, int tipo) : base(nombre, apellido, usuario, contrasenia, legajo)
 
         {
-            _tipoUsuario = tipo;
+            _tipoUsuario = GetTipoDeUsuario(tipo);
         }
-        public override string MostrarDatosUsr()
+        public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(base.MostrarDatosUsr());
-            return sb.ToString();
+            return base.ToString();
         }
+
         public ETiposUsuarios TipoUsuarix
         {
             get { return _tipoUsuario; }
-            
-        }     
+
+        }
+
+        private static ETiposUsuarios GetTipoDeUsuario(int tipo)
+        {
+            ETiposUsuarios eTiposUsuarios = new ETiposUsuarios();
  
+
+            switch (tipo)
+            {
+                case 1:
+                    eTiposUsuarios = ETiposUsuarios.Admin;
+                    break;
+                case 3:
+                    eTiposUsuarios = ETiposUsuarios.Alumno;
+                    break;
+                case 2:
+                    eTiposUsuarios = ETiposUsuarios.Profesor;
+                    break;
+
+            }
+            return eTiposUsuarios;
+
+        }
 
 
     }
